@@ -1,9 +1,3 @@
-/**
- * Stub of Mediawesome for Android.
- *
- * @providesModule Mediawesome
- * @flow
- */
 'use strict';
 
 var warning = require('fbjs/lib/warning');
