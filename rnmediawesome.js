@@ -5,27 +5,31 @@
 var RNMediawesome = require('react-native').NativeModules.RNMediawesome;
 
 module.exports = {
-  createPlaylist: function(filePaths, promise) {
-    return RNMediawesome.createPlaylist;
+  init: function() {
+    return RNMediawesome.init();
   },
 
-  getPlaylist: function(id, promise) {
-    return RNMediawesome.getPlaylist;
+  createPlaylist: function(filePaths) {
+    return RNMediawesome.createPlaylist(filePaths);
   },
 
-  destroyPlaylist: function(id, promise) {
-    return RNMediawesome.destroyPlaylist;
+  getPlaylist: function(id) {
+    return RNMediawesome.getPlaylist(id);
   },
 
-  getAllPlaylists: function(promise) {
-    return RNMediawesome.getAllPlaylists;
+  destroyPlaylist: function(id) {
+    return RNMediawesome.destroyPlaylist(id);
   },
 
-  startPlaylist: function(id, promise) {
-    return RNMediawesome.startPlaylists;
+  getAllPlaylists: function() {
+    return RNMediawesome.getAllPlaylists();
   },
 
-  stopPlaylist: function(id, promise) {
-    return RNMediawesome.stopPlaylist;
+  startPlaylist: function(id) {
+    return RNMediawesome.startPlaylists(id);
+  },
+
+  stopPlaylist: function(id) {
+    return RNMediawesome.stopPlaylist(id);
   },
 };

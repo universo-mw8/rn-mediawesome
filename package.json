@@ -1,6 +1,6 @@
 {
   "name": "react-native-mediawesome",
-  "description": "A stable Media Player for React Native",
+  "description": "A playlists-based Media Player for React Native",
   "version": "0.0.1",
   "keywords": "react-native",
   "main": "rnmediawesome.js",
