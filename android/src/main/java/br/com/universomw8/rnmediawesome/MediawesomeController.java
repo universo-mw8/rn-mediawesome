@@ -75,8 +75,8 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
     public void stopPlaylist(String id, Promise promise) {
     }
 
-    public void init(MediawesomePlayerView videoView, final Promise promise) {
-        MediawesomeController.this.player = new Player(this.getCurrentActivity(), videoView);
+    public void init(MediawesomePlayerView surfaceView, final Promise promise) {
+        MediawesomeController.this.player = new Player(this.getCurrentActivity(), surfaceView);
         if (promise != null)
             promise.resolve(true);
     }
