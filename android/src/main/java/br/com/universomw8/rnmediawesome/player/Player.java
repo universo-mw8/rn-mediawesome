@@ -3,8 +3,8 @@ package br.com.universomw8.rnmediawesome.player;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.view.SurfaceHolder;
-import android.widget.VideoView;
+import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,31 +12,33 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 
+import br.com.universomw8.rnmediawesome.MediawesomePlayerView;
+
 public class Player {
-    private final SurfaceHolder surface;
     private Activity currentActivity;
     private HashMap<String, ArrayDeque<File>> playlists;
     private String currentPlaylistId;
     private Deque<File> currentPlaylist;
     private MediaPlayer nextMediaPlayer;
     private MediaPlayer currentMediaPlayer;
+    private MediawesomePlayerView surfaceView;
 
-    public Player(Activity currentActivity, VideoView videoView) {
+    public Player(Activity currentActivity, MediawesomePlayerView surfaceView) {
+        this.surfaceView = surfaceView;
         this.playlists = new HashMap<>();
         this.currentActivity = currentActivity;
-        this.surface = videoView.getHolder();
     }
 
     public String createPlaylist(ArrayDeque<File> files) {
         String uid = "4";
 
-        File directory = currentActivity.getFilesDir();
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
         ArrayDeque<File> videos = new ArrayDeque<>();
 
-        videos.push(new File(directory.getAbsolutePath() + "/service.mp4"));
         videos.push(new File(directory.getAbsolutePath() + "/wearables.mp4"));
         videos.push(new File(directory.getAbsolutePath() + "/pay.mp4"));
+        videos.push(new File(directory.getAbsolutePath() + "/branco1.mp4"));
 
         this.playlists.put(uid, videos);
 
@@ -60,7 +62,6 @@ public class Player {
         currentPlaylistId = id;
         currentPlaylist = playlists.get(id);
 
-        surface.setKeepScreenOn(true);
         startPlayback();
 
         return true;
@@ -68,7 +69,7 @@ public class Player {
 
     private void startPlayback() {
         currentMediaPlayer = new MediaPlayer();
-        currentMediaPlayer.setDisplay(surface);
+        currentMediaPlayer.setDisplay(surfaceView.getHolder());
 
         try {
             currentMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peek()));
@@ -78,30 +79,49 @@ public class Player {
         }
 
         currentMediaPlayer.start();
-        setUpNextMediaPlayer(currentMediaPlayer);
+        setUpNextMediaPlayer();
     }
 
-    private void setUpNextMediaPlayer(final MediaPlayer mediaPlayer) {
-        mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+    private void setUpNextMediaPlayer() {
+        currentMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
                 if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                     currentPlaylist.addLast(currentPlaylist.pop());
 
                     nextMediaPlayer = new MediaPlayer();
+                    nextMediaPlayer.setDisplay(surfaceView.getHolder());
 
                     try {
                         nextMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peek()));
-                        nextMediaPlayer.prepare();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                    mediaPlayer.setNextMediaPlayer(nextMediaPlayer);
-                    setUpNextMediaPlayer(nextMediaPlayer);
                 }
 
+                Log.d("MediaPlayerListener", "Info: what " + String.valueOf(what) + " extra " + String.valueOf(extra));
                 return false;
+            }
+        });
+
+        currentMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Log.d("MediaPlayerListener", "Completion: " + mp.toString());
+
+                currentMediaPlayer.release();
+
+                try {
+                    nextMediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                currentMediaPlayer = nextMediaPlayer;
+                nextMediaPlayer = null;
+
+                currentMediaPlayer.start();
+                setUpNextMediaPlayer();
             }
         });
     }
