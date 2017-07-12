@@ -1,24 +1,23 @@
 package br.com.universomw8.rnmediawesome;
 
-import java.util.*;
-
-import android.app.Activity;
-
 import com.facebook.react.ReactPackage;
-import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.JavaScriptModule;
+import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class RNMediawesomePackage implements ReactPackage {
-  private Activity mCurrentActivity;
+  private MediawesomeController controller;
+  private MediawesomeViewManager viewManager;
 
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    List<NativeModule> modules = new ArrayList<>();
-
-    modules.add(new RNMediawesome(reactContext));
-    return modules;
+    controller = new MediawesomeController(reactContext);
+    return Arrays.<NativeModule>asList(controller);
   }
 
   @Override
@@ -28,6 +27,7 @@ public class RNMediawesomePackage implements ReactPackage {
 
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-    return Arrays.<ViewManager>asList();
+    viewManager = new MediawesomeViewManager(reactContext, this);
+    return Arrays.<ViewManager>asList(viewManager);
   }
 }

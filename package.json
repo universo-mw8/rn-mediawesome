@@ -3,6 +3,6 @@
   "description": "A playlists-based Media Player for React Native",
   "version": "0.0.1",
   "keywords": "react-native",
-  "main": "rnmediawesome.js",
+  "main": "MediawesomePlayer.js",
   "license": "MIT"
 }
