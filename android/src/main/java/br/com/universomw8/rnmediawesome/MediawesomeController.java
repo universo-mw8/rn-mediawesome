@@ -46,11 +46,11 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startPlaylist(String id, final Promise promise) {
+    public void startPlaylist(final String uid, final Promise promise) {
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                promise.resolve(player.startPlaylist(null));
+                promise.resolve(player.startPlaylist(uid));
             }
         });
     }

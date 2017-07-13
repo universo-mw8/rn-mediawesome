@@ -55,8 +55,8 @@ public class Player {
     }
 
     public boolean startPlaylist(String id) {
-
-        id = "4";
+        if (id == null || id.length() == 0)
+            return false;
 
         if (currentMediaPlayer != null)
             currentMediaPlayer.release();
