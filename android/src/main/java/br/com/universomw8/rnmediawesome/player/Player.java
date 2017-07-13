@@ -3,18 +3,20 @@ package br.com.universomw8.rnmediawesome.player;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Random;
 
 import br.com.universomw8.rnmediawesome.MediawesomePlayerView;
 
 public class Player {
+    private final Random randomInstance;
     private Activity currentActivity;
     private HashMap<String, ArrayDeque<File>> playlists;
     private String currentPlaylistId;
@@ -27,22 +29,25 @@ public class Player {
         this.surfaceView = surfaceView;
         this.playlists = new HashMap<>();
         this.currentActivity = currentActivity;
+        randomInstance = new Random(currentActivity.hashCode() * surfaceView.hashCode());
     }
 
-    public String createPlaylist(ArrayDeque<File> files) {
-        String uid = "4";
-
-        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    public String createPlaylist(ArrayList<String> filePaths) {
+        String uid = getRandomHex(8);
 
         ArrayDeque<File> videos = new ArrayDeque<>();
 
-        videos.push(new File(directory.getAbsolutePath() + "/wearables.mp4"));
-        videos.push(new File(directory.getAbsolutePath() + "/pay.mp4"));
-        videos.push(new File(directory.getAbsolutePath() + "/branco1.mp4"));
+        for (String path : filePaths) {
+            videos.push(new File(path));
+        }
 
-        this.playlists.put(uid, videos);
+        playlists.put(uid, videos);
 
         return uid;
+    }
+
+    public boolean destroyPlaylist(String uid) {
+        return playlists.remove(uid) != null;
     }
 
     public ArrayDeque<File> getPlaylist(String id) {
@@ -124,5 +129,13 @@ public class Player {
                 setUpNextMediaPlayer();
             }
         });
+    }
+
+    private String getRandomHex(int count) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append(Integer.toHexString(randomInstance.nextInt(16)));
+        }
+        return sb.toString();
     }
 }

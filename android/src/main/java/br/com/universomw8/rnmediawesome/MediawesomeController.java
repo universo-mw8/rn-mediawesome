@@ -21,24 +21,6 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         this.context = reactContext;
     }
 
-    private static ArrayList<String> getFilePathsArrayList(ReadableArray filePaths) {
-        ArrayList<String> paths = new ArrayList<>();
-
-        for (int i = 0; i < filePaths.size(); i++) {
-            paths.add(filePaths.getString(i));
-        }
-
-        return paths;
-    }
-
-    private static WritableArray getPlaylistWritableArray(ArrayList<String> playlist) {
-        WritableArray arr = Arguments.createArray();
-        for (String s : playlist) {
-            arr.pushString(s);
-        }
-        return arr;
-    }
-
     @Override
     public String getName() {
         return "MediawesomeController";
@@ -46,7 +28,12 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void createPlaylist(ReadableArray filePaths, Promise promise) {
-        promise.resolve(player.createPlaylist(null));
+        promise.resolve(player.createPlaylist(getFilePathsArrayList(filePaths)));
+    }
+
+    @ReactMethod
+    public void destroyPlaylist(String uid, Promise promise) {
+        promise.resolve(player.destroyPlaylist(uid));
     }
 
     @ReactMethod
@@ -54,11 +41,8 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void destroyPlaylist(String id, Promise promise) {
-    }
-
-    @ReactMethod
     public void getAllPlaylists(Promise promise) {
+        throw new RuntimeException("Not implemented");
     }
 
     @ReactMethod
@@ -75,9 +59,29 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
     public void stopPlaylist(String id, Promise promise) {
     }
 
-    public void init(MediawesomePlayerView surfaceView, final Promise promise) {
+    void init(MediawesomePlayerView surfaceView, final Promise promise) {
         MediawesomeController.this.player = new Player(this.getCurrentActivity(), surfaceView);
         if (promise != null)
             promise.resolve(true);
+    }
+
+    private static ArrayList<String> getFilePathsArrayList(ReadableArray filePaths) {
+        ArrayList<String> paths = new ArrayList<>();
+
+        for (int i = 0; i < filePaths.size(); i++) {
+            String s = filePaths.getString(i);
+            if (s != null && s.length() > 0)
+                paths.add(s);
+        }
+
+        return paths;
+    }
+
+    private static WritableArray getPlaylistWritableArray(ArrayList<String> playlist) {
+        WritableArray arr = Arguments.createArray();
+        for (String s : playlist) {
+            arr.pushString(s);
+        }
+        return arr;
     }
 }
