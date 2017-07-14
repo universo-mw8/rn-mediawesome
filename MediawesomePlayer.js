@@ -20,12 +20,10 @@ class MediawesomePlayer extends Component {
 
   render() {
     return (
-      <View>
-          <RCTMediawesomePlayer
-            ref={this.assignRoot}
-            {...this.props}
-          />
-      </View>
+      <RCTMediawesomePlayer
+        ref={this.assignRoot}
+        {...this.props}
+      />
     )
   }
 }
