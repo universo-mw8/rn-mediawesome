@@ -31,6 +31,7 @@ class MediawesomePlayer extends Component {
 }
 
 MediawesomePlayer.propTypes = {
+  alpha: PropTypes.number,
   ...View.propTypes,
 }
 
@@ -67,6 +68,22 @@ module.exports = {
 
   stopPlaylist: function(id) {
     return MediawesomeController.stopPlaylist(id);
+  },
+
+  isPlaying: function() {
+    return MediawesomeController.isPlaying(id);
+  },
+
+  hideScreen: function() {
+    return MediawesomeController.hideScreen(id);
+  },
+
+  showScreen: function() {
+    return MediawesomeController.showScreen(id);
+  },
+
+  stopPlayback: function() {
+    return MediawesomeController.stopPlayback(id);
   },
 
   MediawesomePlayer: MediawesomePlayer,

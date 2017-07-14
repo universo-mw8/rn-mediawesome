@@ -58,11 +58,7 @@ public class Player {
         if (id == null || id.length() == 0)
             return false;
 
-        if (currentMediaPlayer != null)
-            currentMediaPlayer.release();
-
-        if (nextMediaPlayer != null)
-            nextMediaPlayer.release();
+        stopPlayback();
 
         currentPlaylistId = id;
         currentPlaylist = playlists.get(id);
@@ -137,5 +133,34 @@ public class Player {
             sb.append(Integer.toHexString(randomInstance.nextInt(16)));
         }
         return sb.toString();
+    }
+
+    public boolean isPlaying() {
+        return currentPlaylistId != null;
+    }
+
+    public boolean stopPlayback() {
+        if (currentMediaPlayer != null)
+            currentMediaPlayer.release();
+
+        if (nextMediaPlayer != null)
+            nextMediaPlayer.release();
+
+        currentPlaylist = null;
+        currentPlaylistId = null;
+
+        return true;
+    }
+
+    public boolean hideScreen() {
+        float alpha = surfaceView.getAlpha();
+        surfaceView.setAlpha(0);
+        return alpha != 0;
+    }
+
+    public boolean showScreen() {
+        float alpha = surfaceView.getAlpha();
+        surfaceView.setAlpha(1);
+        return alpha != 1;
     }
 }

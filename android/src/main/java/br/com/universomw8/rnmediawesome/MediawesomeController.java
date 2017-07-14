@@ -38,6 +38,7 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getPlaylist(String id, Promise promise) {
+        throw new RuntimeException("Not implemented");
     }
 
     @ReactMethod
@@ -56,7 +57,33 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void stopPlaylist(String id, Promise promise) {
+    public void hideScreen(final Promise promise) {
+        context.runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(player.hideScreen());
+            }
+        });
+    }
+
+    @ReactMethod
+    public void showScreen(final Promise promise) {
+        context.runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(player.showScreen());
+            }
+        });
+    }
+
+    @ReactMethod
+    public void stopPlayback(Promise promise) {
+        promise.resolve(player.stopPlayback());
+    }
+
+    @ReactMethod
+    public void isPlaying(Promise promise) {
+        promise.resolve(player.isPlaying());
     }
 
     void init(MediawesomePlayerView surfaceView, final Promise promise) {
