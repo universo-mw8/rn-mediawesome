@@ -10,5 +10,6 @@ public class MediawesomePlayerView extends SurfaceView {
 
     public MediawesomePlayerView(ThemedReactContext context) {
         super(context);
+        this.setBackgroundColor(getResources().getColor(android.R.color.transparent));
     }
 }

@@ -20,17 +20,16 @@ class MediawesomePlayer extends Component {
 
   render() {
     return (
-      <View>
-          <RCTMediawesomePlayer
-            ref={this.assignRoot}
-            {...this.props}
-          />
-      </View>
+      <RCTMediawesomePlayer
+        ref={this.assignRoot}
+        {...this.props}
+      />
     )
   }
 }
 
 MediawesomePlayer.propTypes = {
+  alpha: PropTypes.number,
   ...View.propTypes,
 }
 
@@ -67,6 +66,22 @@ module.exports = {
 
   stopPlaylist: function(id) {
     return MediawesomeController.stopPlaylist(id);
+  },
+
+  isPlaying: function() {
+    return MediawesomeController.isPlaying(id);
+  },
+
+  hideScreen: function() {
+    return MediawesomeController.hideScreen(id);
+  },
+
+  showScreen: function() {
+    return MediawesomeController.showScreen(id);
+  },
+
+  stopPlayback: function() {
+    return MediawesomeController.stopPlayback(id);
   },
 
   MediawesomePlayer: MediawesomePlayer,
