@@ -28,6 +28,12 @@ public class MediawesomeViewManager extends SimpleViewManager<MediawesomePlayerV
         return view;
     }
 
+    @Override
+    public void onDropViewInstance(MediawesomePlayerView view) {
+        super.onDropViewInstance(view);
+        context.getNativeModule(MediawesomeController.class).stopPlayback(null);
+    }
+
     @ReactProp(name = "alpha", defaultFloat = 0f)
     public void setAlpha(MediawesomePlayerView view, float alpha) {
         view.setAlpha(alpha);

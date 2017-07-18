@@ -51,7 +51,9 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                promise.resolve(player.startPlaylist(uid));
+                if (promise != null) {
+                    promise.resolve(player.startPlaylist(uid));
+                }
             }
         });
     }
@@ -61,7 +63,9 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                promise.resolve(player.hideScreen());
+                if (promise != null) {
+                    promise.resolve(player.hideScreen());
+                }
             }
         });
     }
@@ -71,25 +75,32 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                promise.resolve(player.showScreen());
+                if (promise != null) {
+                    promise.resolve(player.showScreen());
+                }
             }
         });
     }
 
     @ReactMethod
     public void stopPlayback(Promise promise) {
-        promise.resolve(player.stopPlayback());
+        if (promise != null) {
+            promise.resolve(player.stopPlayback());
+        }
     }
 
     @ReactMethod
     public void isPlaying(Promise promise) {
-        promise.resolve(player.isPlaying());
+        if (promise != null) {
+            promise.resolve(player.isPlaying());
+        }
     }
 
     void init(MediawesomePlayerView surfaceView, final Promise promise) {
         MediawesomeController.this.player = new Player(this.getCurrentActivity(), surfaceView);
-        if (promise != null)
+        if (promise != null) {
             promise.resolve(true);
+        }
     }
 
     private static ArrayList<String> getFilePathsArrayList(ReadableArray filePaths) {
