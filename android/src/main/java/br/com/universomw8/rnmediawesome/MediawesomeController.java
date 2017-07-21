@@ -1,5 +1,7 @@
 package br.com.universomw8.rnmediawesome;
 
+import android.widget.RelativeLayout;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -12,9 +14,13 @@ import java.util.ArrayList;
 
 import br.com.universomw8.rnmediawesome.player.Player;
 
+import static android.widget.RelativeLayout.CENTER_IN_PARENT;
+import static android.widget.RelativeLayout.TRUE;
+
 public class MediawesomeController extends ReactContextBaseJavaModule {
     private ReactApplicationContext context;
     private Player player;
+    private MediawesomePlayerView view;
 
     public MediawesomeController(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -86,8 +92,21 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         promise.resolve(player.isPlaying());
     }
 
-    void init(MediawesomePlayerView surfaceView, final Promise promise) {
-        MediawesomeController.this.player = new Player(this.getCurrentActivity(), surfaceView);
+    @ReactMethod
+    public void setScreenSize(int width, int height, Promise promise) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+        params.addRule(CENTER_IN_PARENT, TRUE);
+
+        view.getSurfaceView().setLayoutParams(params);
+
+        if (promise != null) {
+            promise.resolve(player.isPlaying());
+        }
+    }
+
+    void init(MediawesomePlayerView view, final Promise promise) {
+        this.view = view;
+        MediawesomeController.this.player = new Player(this.getCurrentActivity(), view);
         if (promise != null)
             promise.resolve(true);
     }
