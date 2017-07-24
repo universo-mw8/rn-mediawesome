@@ -1,5 +1,7 @@
 package br.com.universomw8.rnmediawesome;
 
+import android.widget.RelativeLayout;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -12,9 +14,13 @@ import java.util.ArrayList;
 
 import br.com.universomw8.rnmediawesome.player.Player;
 
+import static android.widget.RelativeLayout.CENTER_IN_PARENT;
+import static android.widget.RelativeLayout.TRUE;
+
 public class MediawesomeController extends ReactContextBaseJavaModule {
     private ReactApplicationContext context;
     private Player player;
+    private MediawesomePlayerView view;
 
     public MediawesomeController(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -51,7 +57,9 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                promise.resolve(player.startPlaylist(uid));
+                if (promise != null) {
+                    promise.resolve(player.startPlaylist(uid));
+                }
             }
         });
     }
@@ -61,7 +69,9 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                promise.resolve(player.hideScreen());
+                if (promise != null) {
+                    promise.resolve(player.hideScreen());
+                }
             }
         });
     }
@@ -71,25 +81,32 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                promise.resolve(player.showScreen());
+                if (promise != null) {
+                    promise.resolve(player.showScreen());
+                }
             }
         });
     }
 
     @ReactMethod
     public void stopPlayback(Promise promise) {
-        promise.resolve(player.stopPlayback());
+        if (promise != null) {
+            promise.resolve(player.stopPlayback());
+        }
     }
 
     @ReactMethod
     public void isPlaying(Promise promise) {
-        promise.resolve(player.isPlaying());
+        if (promise != null) {
+            promise.resolve(player.isPlaying());
+        }
     }
 
     void init(MediawesomePlayerView surfaceView, final Promise promise) {
         MediawesomeController.this.player = new Player(this.getCurrentActivity(), surfaceView);
-        if (promise != null)
+        if (promise != null) {
             promise.resolve(true);
+        }
     }
 
     private static ArrayList<String> getFilePathsArrayList(ReadableArray filePaths) {
