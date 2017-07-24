@@ -140,11 +140,19 @@ public class Player {
     }
 
     public boolean stopPlayback() {
-        if (currentMediaPlayer != null)
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.setOnCompletionListener(null);
+            currentMediaPlayer.setOnInfoListener(null);
+            currentMediaPlayer.stop();
             currentMediaPlayer.release();
+        }
 
-        if (nextMediaPlayer != null)
+        if (nextMediaPlayer != null) {
+            nextMediaPlayer.setOnCompletionListener(null);
+            nextMediaPlayer.setOnInfoListener(null);
+            nextMediaPlayer.stop();
             nextMediaPlayer.release();
+        }
 
         currentPlaylist = null;
         currentPlaylistId = null;
