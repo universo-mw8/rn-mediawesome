@@ -1,15 +1,24 @@
 package br.com.universomw8.rnmediawesome;
 
+import android.widget.RelativeLayout;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
+import static android.widget.RelativeLayout.CENTER_IN_PARENT;
+import static android.widget.RelativeLayout.TRUE;
+
 public class MediawesomeViewManager extends SimpleViewManager<MediawesomePlayerView> {
 
     public static final String REACT_CLASS = "RCTMediawesomePlayer";
+    public static final int UNSET_SIZE = -9999;
     private ReactApplicationContext context;
     private RNMediawesomePackage mediawesomePackage;
+    private int height = UNSET_SIZE;
+    private int width = UNSET_SIZE;
+    private MediawesomePlayerView view;
 
     public MediawesomeViewManager(ReactApplicationContext context, RNMediawesomePackage mediawesomePackage) {
         this.context = context;
@@ -23,7 +32,7 @@ public class MediawesomeViewManager extends SimpleViewManager<MediawesomePlayerV
 
     @Override
     protected MediawesomePlayerView createViewInstance(ThemedReactContext themedReactContext) {
-        MediawesomePlayerView view = new MediawesomePlayerView(themedReactContext);
+        view = new MediawesomePlayerView(themedReactContext);
         themedReactContext.getNativeModule(MediawesomeController.class).init(view, null);
         return view;
     }
@@ -37,5 +46,27 @@ public class MediawesomeViewManager extends SimpleViewManager<MediawesomePlayerV
     @ReactProp(name = "alpha", defaultFloat = 0f)
     public void setAlpha(MediawesomePlayerView view, float alpha) {
         view.setAlpha(alpha);
+    }
+
+    @ReactProp(name = "width", defaultInt = UNSET_SIZE)
+    public void setWidth(MediawesomePlayerView view, int width) {
+        this.width = width;
+        maybeSetWidthHeight();
+    }
+
+    @ReactProp(name = "height", defaultInt = UNSET_SIZE)
+    public void setHeight(MediawesomePlayerView view, int height) {
+        this.height = height;
+        maybeSetWidthHeight();
+    }
+
+    private void maybeSetWidthHeight() {
+        if (width == UNSET_SIZE || height == UNSET_SIZE)
+            return;
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+        params.addRule(CENTER_IN_PARENT, TRUE);
+
+        view.getSurfaceView().setLayoutParams(params);
     }
 }

@@ -102,18 +102,6 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         }
     }
 
-    @ReactMethod
-    public void setScreenSize(int width, int height, Promise promise) {
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
-        params.addRule(CENTER_IN_PARENT, TRUE);
-
-        view.getSurfaceView().setLayoutParams(params);
-
-        if (promise != null) {
-            promise.resolve(player.isPlaying());
-        }
-    }
-
     void init(MediawesomePlayerView surfaceView, final Promise promise) {
         MediawesomeController.this.player = new Player(this.getCurrentActivity(), surfaceView);
         if (promise != null) {
