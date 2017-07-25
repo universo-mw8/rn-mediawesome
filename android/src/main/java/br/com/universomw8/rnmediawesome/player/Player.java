@@ -24,6 +24,7 @@ public class Player {
     private MediaPlayer nextMediaPlayer;
     private MediaPlayer currentMediaPlayer;
     private MediawesomePlayerView surfaceView;
+    private static final String TAG = "Mediawesome Player";
 
     public Player(Activity currentActivity, MediawesomePlayerView surfaceView) {
         this.surfaceView = surfaceView;
@@ -88,19 +89,10 @@ public class Player {
             @Override
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
                 if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                    currentPlaylist.addLast(currentPlaylist.pop());
-
-                    nextMediaPlayer = new MediaPlayer();
-                    nextMediaPlayer.setDisplay(surfaceView.getHolder());
-
-                    try {
-                        nextMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peek()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    createNextMediaPlayer();
                 }
 
-                Log.d("MediaPlayerListener", "Info: what " + String.valueOf(what) + " extra " + String.valueOf(extra));
+                Log.d(TAG, "Info: what " + String.valueOf(what) + " extra " + String.valueOf(extra));
                 return false;
             }
         });
@@ -108,9 +100,20 @@ public class Player {
         currentMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Log.d("MediaPlayerListener", "Completion: " + mp.toString());
+                Log.d(TAG, "Completion: " + mp.toString());
 
                 currentMediaPlayer.release();
+
+                // This shouldn't happen
+                if (nextMediaPlayer == null) {
+                    Log.e(TAG, "nextMediaPlayer is null! Trying to recreate it");
+                    createNextMediaPlayer();
+
+                    if (nextMediaPlayer == null) {
+                        Log.e(TAG, "nextMediaPlayer is still null! Something's broke yall");
+                        throw new NullPointerException("nextMediaPlayer is null even after trying to recreate it");
+                    }
+                }
 
                 try {
                     nextMediaPlayer.prepare();
@@ -125,6 +128,19 @@ public class Player {
                 setUpNextMediaPlayer();
             }
         });
+    }
+
+    private void createNextMediaPlayer() {
+        currentPlaylist.addLast(currentPlaylist.pop());
+
+        nextMediaPlayer = new MediaPlayer();
+        nextMediaPlayer.setDisplay(surfaceView.getHolder());
+
+        try {
+            nextMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peek()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getRandomHex(int count) {
