@@ -44,45 +44,45 @@ module.exports = {
     return MediawesomeController.init();
   },
 
-  createPlaylist: function(filePaths) {
-    return MediawesomeController.createPlaylist(filePaths);
-  },
+  // createPlaylist: function(filePaths) {
+  //   return MediawesomeController.createPlaylist(filePaths);
+  // },
 
-  getPlaylist: function(id) {
-    return MediawesomeController.getPlaylist(id);
-  },
+  // getPlaylist: function(id) {
+  //   return MediawesomeController.getPlaylist(id);
+  // },
 
-  destroyPlaylist: function(id) {
-    return MediawesomeController.destroyPlaylist(id);
-  },
+  // destroyPlaylist: function(id) {
+  //   return MediawesomeController.destroyPlaylist(id);
+  // },
 
-  getAllPlaylists: function() {
-    return MediawesomeController.getAllPlaylists();
-  },
+  // getAllPlaylists: function() {
+  //   return MediawesomeController.getAllPlaylists();
+  // },
 
-  startPlaylist: function(id) {
-    return MediawesomeController.startPlaylists(id);
-  },
+  // startPlaylist: function(id) {
+  //   return MediawesomeController.startPlaylists(id);
+  // },
 
-  stopPlaylist: function(id) {
-    return MediawesomeController.stopPlaylist(id);
-  },
+  // isPlaying: function() {
+  //   return MediawesomeController.isPlaying();
+  // },
 
-  isPlaying: function() {
-    return MediawesomeController.isPlaying(id);
-  },
+  // hideScreen: function() {
+  //   return MediawesomeController.hideScreen()
+  // },
 
-  hideScreen: function() {
-    return MediawesomeController.hideScreen(id);
-  },
+  // showScreen: function() {
+  //   return MediawesomeController.showScreen();
+  // },
 
-  showScreen: function() {
-    return MediawesomeController.showScreen(id);
-  },
+  // stopPlayback: function() {
+  //   return MediawesomeController.stopPlayback();
+  // },
 
-  stopPlayback: function() {
-    return MediawesomeController.stopPlayback(id);
-  },
+  // getCurrentPlaylist: function() {
+  //   return MediawesomeController.getCurrentPlaylist();
+  // },
 
   MediawesomePlayer: MediawesomePlayer,
 

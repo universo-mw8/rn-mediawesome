@@ -1,24 +1,22 @@
-## react-native-mediawesome
+# rn-mediawesome
 
-A stable Media Player for React Native. Android only for now
+Android playlist-based media player for React Native
 
-Requires react-native >= 0.40.0, for RN support of 0.19.0 - 0.39.0 please use a pre 1.0 version.
+## Adding it to your project
 
-### Add it to your project
+Run `npm i -S rn-mediawesome` or `yarn add rn-mediawesome`
 
-Run `npm i -S react-native-mediawesome` ou `yarn add react-native-mediawesome`
+## Installation
 
-#### Android
-
-Run `react-native link` to link the react-native-mediawesome library.
+Run `react-native link` to link the rn-mediawesome library.
 
 Or if you have trouble, make the following additions to the given files manually:
 
 **android/settings.gradle**
 
 ```gradle
-include ':react-native-mediawesome'
-project(':react-native-mediawesome').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-mediawesome/android')
+include ':rn-mediawesome'
+project(':rn-mediawesome').projectDir = new File(rootProject.projectDir, '../node_modules/rn-mediawesome/android')
 ```
 
 **android/app/build.gradle**
@@ -26,7 +24,7 @@ project(':react-native-mediawesome').projectDir = new File(rootProject.projectDi
 ```gradle
 dependencies {
    ...
-   compile project(':react-native-mediawesome')
+   compile project(':rn-mediawesome')
 }
 ```
 
@@ -50,10 +48,46 @@ protected List<ReactPackage> getPackages() {
 }
 ```
 
-## TODOS
+## Usage
 
-- [ ] iOS and Windows
+Just import,
+```javascript
+import { MediawesomePlayer, MediawesomeController } from 'rn-mediawesome'
+```
 
----
+render,
+```javascript
+<MediawesomePlayer width={1920} height={1080} alpha={0} />
+```
+
+create playlists by passing a list of locally available files,
+```javascript
+this.uid = await MediawesomeController.createPlaylist(['/absolute/path/to/file.mp4'])
+```
+
+and start playback of a playlist
+```javascript
+MediawesomeController.startPlaylist(this.uid)
+```
+
+Other available controls are:
+```javascript
+MediawesomeController.showScreen()
+MediawesomeController.hideScreen()
+MediawesomeController.stopPlayback()
+MediawesomeController.isPlaying()
+MediawesomeController.getCurrentPlaylist() // returns the current playlist uid
+MediawesomeController.getAllPlaylists() // returns a list of uid's
+MediawesomeController.getPlaylist(uid) // returns a list of absolute paths, or null
+```
+
+All `MediawesomeController` methods are promise-based
+
+
+## TODO
+
+[ ] tests
+[ ] iOs? maybe? wanna help?
+
 
 **MIT Licensed**

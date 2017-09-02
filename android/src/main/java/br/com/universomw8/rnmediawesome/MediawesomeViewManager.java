@@ -10,17 +10,17 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import static android.widget.RelativeLayout.CENTER_IN_PARENT;
 import static android.widget.RelativeLayout.TRUE;
 
-public class MediawesomeViewManager extends SimpleViewManager<MediawesomePlayerView> {
+class MediawesomeViewManager extends SimpleViewManager<MediawesomePlayerView> {
 
-    public static final String REACT_CLASS = "RCTMediawesomePlayer";
-    public static final int UNSET_SIZE = -9999;
+    private static final String REACT_CLASS = "RCTMediawesomePlayer";
+    private static final int UNSET_SIZE = -9999;
     private ReactApplicationContext context;
     private RNMediawesomePackage mediawesomePackage;
     private int height = UNSET_SIZE;
     private int width = UNSET_SIZE;
     private MediawesomePlayerView view;
 
-    public MediawesomeViewManager(ReactApplicationContext context, RNMediawesomePackage mediawesomePackage) {
+    MediawesomeViewManager(ReactApplicationContext context, RNMediawesomePackage mediawesomePackage) {
         this.context = context;
         this.mediawesomePackage = mediawesomePackage;
     }
@@ -33,7 +33,7 @@ public class MediawesomeViewManager extends SimpleViewManager<MediawesomePlayerV
     @Override
     protected MediawesomePlayerView createViewInstance(ThemedReactContext themedReactContext) {
         view = new MediawesomePlayerView(themedReactContext);
-        themedReactContext.getNativeModule(MediawesomeController.class).init(view, null);
+        themedReactContext.getNativeModule(MediawesomeController.class).init(view);
         return view;
     }
 

@@ -1,7 +1,5 @@
 package br.com.universomw8.rnmediawesome;
 
-import android.widget.RelativeLayout;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -14,17 +12,19 @@ import java.util.ArrayList;
 
 import br.com.universomw8.rnmediawesome.player.Player;
 
-import static android.widget.RelativeLayout.CENTER_IN_PARENT;
-import static android.widget.RelativeLayout.TRUE;
-
-public class MediawesomeController extends ReactContextBaseJavaModule {
+class MediawesomeController extends ReactContextBaseJavaModule {
     private ReactApplicationContext context;
     private Player player;
     private MediawesomePlayerView view;
 
-    public MediawesomeController(ReactApplicationContext reactContext) {
+    MediawesomeController(ReactApplicationContext reactContext) {
         super(reactContext);
         this.context = reactContext;
+    }
+
+    void init(MediawesomePlayerView surfaceView) {
+        this.view = surfaceView;
+        this.player = new Player(this.getCurrentActivity(), surfaceView);
     }
 
     @Override
@@ -43,70 +43,77 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPlaylist(String id, Promise promise) {
-        throw new RuntimeException("Not implemented");
+    public void getPlaylist(String uid, Promise promise) {
+        if (promise != null)
+            promise.resolve(getPlaylistWritableArray(player.getPlaylist(uid)));
     }
 
     @ReactMethod
     public void getAllPlaylists(Promise promise) {
-        throw new RuntimeException("Not implemented");
+        if (promise != null)
+            promise.resolve(getPlaylistWritableArray(player.getAllPlaylists()));
     }
 
     @ReactMethod
     public void startPlaylist(final String uid, final Promise promise) {
+        checkViewInitialized();
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                if (promise != null) {
+                if (promise != null)
                     promise.resolve(player.startPlaylist(uid));
-                }
             }
         });
     }
 
     @ReactMethod
     public void hideScreen(final Promise promise) {
+        checkViewInitialized();
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                if (promise != null) {
+                if (promise != null)
                     promise.resolve(player.hideScreen());
-                }
             }
         });
     }
 
     @ReactMethod
     public void showScreen(final Promise promise) {
+        checkViewInitialized();
         context.runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
-                if (promise != null) {
+                if (promise != null)
                     promise.resolve(player.showScreen());
-                }
             }
         });
     }
 
     @ReactMethod
     public void stopPlayback(Promise promise) {
-        if (promise != null) {
+        checkViewInitialized();
+        if (promise != null)
             promise.resolve(player.stopPlayback());
-        }
     }
 
     @ReactMethod
     public void isPlaying(Promise promise) {
-        if (promise != null) {
+        checkViewInitialized();
+        if (promise != null)
             promise.resolve(player.isPlaying());
-        }
     }
 
-    void init(MediawesomePlayerView surfaceView, final Promise promise) {
-        MediawesomeController.this.player = new Player(this.getCurrentActivity(), surfaceView);
-        if (promise != null) {
-            promise.resolve(true);
-        }
+    @ReactMethod
+    public void getCurrentPlaylist(Promise promise) {
+        checkViewInitialized();
+        if (promise != null)
+            promise.resolve(player.getCurrentPlaylist());
+    }
+
+    private void checkViewInitialized() {
+        if (this.view == null)
+            throw new IllegalStateException("The Mediawesome View is not initialized. Make sure it's being rendered!");
     }
 
     private static ArrayList<String> getFilePathsArrayList(ReadableArray filePaths) {
@@ -121,11 +128,11 @@ public class MediawesomeController extends ReactContextBaseJavaModule {
         return paths;
     }
 
-    private static WritableArray getPlaylistWritableArray(ArrayList<String> playlist) {
+    private static WritableArray getPlaylistWritableArray(Iterable<String> playlist) {
         WritableArray arr = Arguments.createArray();
-        for (String s : playlist) {
+        for (String s : playlist)
             arr.pushString(s);
-        }
+
         return arr;
     }
 }

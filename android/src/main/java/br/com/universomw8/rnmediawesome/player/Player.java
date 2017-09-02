@@ -33,7 +33,7 @@ public class Player {
         randomInstance = new Random(currentActivity.hashCode() * surfaceView.hashCode());
     }
 
-    public String createPlaylist(ArrayList<String> filePaths) {
+    public String createPlaylist(Iterable<String> filePaths) {
         String uid = getRandomHex(8);
 
         ArrayDeque<File> videos = new ArrayDeque<>();
@@ -51,18 +51,26 @@ public class Player {
         return playlists.remove(uid) != null;
     }
 
-    public ArrayDeque<File> getPlaylist(String id) {
-        return playlists.get(id);
-    }
-
-    public boolean startPlaylist(String id) {
-        if (id == null || id.length() == 0)
-            return false;
+    public boolean startPlaylist(String uid) {
+        if (uid == null || uid.length() == 0) {
+            Log.w(TAG, "startPlaylist called with no uid. Will try to start the first playlist");
+            if (playlists.isEmpty()) {
+                Log.i(TAG, "No playlists created");
+                return false;
+            }
+            Log.i(TAG, "Starting the first playlist");
+            uid = playlists.keySet().toArray()[0].toString();
+        }
 
         stopPlayback();
 
-        currentPlaylistId = id;
-        currentPlaylist = playlists.get(id);
+        currentPlaylistId = uid;
+        currentPlaylist = playlists.get(uid);
+
+        if (surfaceView.getAlpha() == 0) {
+            Log.i(TAG, "The screen is translucent. Opaquing it");
+            showScreen();
+        }
 
         startPlayback();
 
@@ -106,12 +114,12 @@ public class Player {
 
                 // This shouldn't happen
                 if (nextMediaPlayer == null) {
-                    Log.e(TAG, "nextMediaPlayer is null! Trying to recreate it");
+                    Log.w(TAG, "nextMediaPlayer is null! Trying to recreate it");
                     createNextMediaPlayer();
 
                     if (nextMediaPlayer == null) {
                         Log.e(TAG, "nextMediaPlayer is still null! Something's broke yall");
-                        throw new NullPointerException("nextMediaPlayer is null even after trying to recreate it");
+                        throw new IllegalStateException("nextMediaPlayer is null even after trying to recreate it");
                     }
                 }
 
@@ -119,6 +127,9 @@ public class Player {
                     nextMediaPlayer.prepare();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    Log.w(TAG, "IllegalStateException while preparing nextMediaPlayer. Was the activity closed?");
+                    return;
                 }
 
                 currentMediaPlayer = nextMediaPlayer;
@@ -161,6 +172,7 @@ public class Player {
             currentMediaPlayer.setOnInfoListener(null);
             currentMediaPlayer.stop();
             currentMediaPlayer.release();
+            currentMediaPlayer = null;
         }
 
         if (nextMediaPlayer != null) {
@@ -168,6 +180,7 @@ public class Player {
             nextMediaPlayer.setOnInfoListener(null);
             nextMediaPlayer.stop();
             nextMediaPlayer.release();
+            nextMediaPlayer = null;
         }
 
         currentPlaylist = null;
@@ -186,5 +199,24 @@ public class Player {
         float alpha = surfaceView.getAlpha();
         surfaceView.setAlpha(1);
         return alpha != 1;
+    }
+
+    public Iterable<String> getPlaylist(String uid) {
+        if (uid == null || uid.length() == 0)
+            return null;
+        
+        ArrayList<String> res = new ArrayList<>();
+        for (File f : playlists.get(uid))
+            res.add(f.getAbsolutePath());
+
+        return res;
+    }
+
+    public Iterable<String> getAllPlaylists() {
+        return playlists.keySet();
+    }
+
+    public String getCurrentPlaylist() {
+        return currentPlaylistId;
     }
 }
