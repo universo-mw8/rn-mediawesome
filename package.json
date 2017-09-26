@@ -1,8 +1,21 @@
 {
   "name": "rn-mediawesome",
   "description": "Android playlist-based media player for React Native",
-  "version": "1.0.0",
-  "keywords": "react-native android media player playlist",
+  "version": "1.0.1",
+  "keywords": [
+    "react-native android media player playlist"
+  ],
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "universo-mw8/rn-mediawesome",
+  "author": {
+    "name": "Pablo Soares",
+    "email": "slpkvol3@gmail.com",
+    "url": "https://github.com/firefueled"
+  },
+  "bugs": {
+    "url": "https://github.com/universo-mw8/rn-mediawesome/issues",
+    "email": "dev@mw8solucoes.com.br"
+  },
+  "homepage": "https://github.com/universo-mw8/rn-mediawesome#readme"
 }

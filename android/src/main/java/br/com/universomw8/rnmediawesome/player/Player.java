@@ -39,7 +39,7 @@ public class Player {
         ArrayDeque<File> videos = new ArrayDeque<>();
 
         for (String path : filePaths) {
-            videos.push(new File(path));
+            videos.addLast(new File(path));
         }
 
         playlists.put(uid, videos);
@@ -82,7 +82,7 @@ public class Player {
         currentMediaPlayer.setDisplay(surfaceView.getHolder());
 
         try {
-            currentMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peek()));
+            currentMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peekFirst()));
             currentMediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,13 +142,13 @@ public class Player {
     }
 
     private void createNextMediaPlayer() {
-        currentPlaylist.addLast(currentPlaylist.pop());
+        currentPlaylist.addLast(currentPlaylist.removeFirst());
 
         nextMediaPlayer = new MediaPlayer();
         nextMediaPlayer.setDisplay(surfaceView.getHolder());
 
         try {
-            nextMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peek()));
+            nextMediaPlayer.setDataSource(currentActivity, Uri.fromFile(currentPlaylist.peekFirst()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -204,7 +204,7 @@ public class Player {
     public Iterable<String> getPlaylist(String uid) {
         if (uid == null || uid.length() == 0)
             return null;
-        
+
         ArrayList<String> res = new ArrayList<>();
         for (File f : playlists.get(uid))
             res.add(f.getAbsolutePath());
